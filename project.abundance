@@ -13,6 +13,14 @@
       "name": "inset",
       "ioValue": 0,
       "currentEquation": "0"
+    },
+    {
+      "name": "start",
+      "ioValue": 10
+    },
+    {
+      "name": "end",
+      "ioValue": 10
     }
   ],
   "topLevel": true,
@@ -58,9 +66,25 @@
     {
       "atomType": "Input",
       "x": 0.0231,
-      "y": 0.5857142857142857,
+      "y": 0.4685714285714285,
       "uniqueID": "id-169",
       "name": "inset"
+    },
+    {
+      "atomType": "Input",
+      "x": 0.0231,
+      "y": 0.6114285714285714,
+      "uniqueID": "id-172",
+      "name": "start",
+      "type": "boolean"
+    },
+    {
+      "atomType": "Input",
+      "x": 0.0231,
+      "y": 0.6954285714285714,
+      "uniqueID": "id-175",
+      "name": "end",
+      "type": "boolean"
     }
   ],
   "allConnectors": [
