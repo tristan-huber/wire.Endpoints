@@ -50,11 +50,19 @@
         {
           "name": "inset",
           "ioValue": 0
+        },
+        {
+          "name": "start",
+          "ioValue": 10
+        },
+        {
+          "name": "end",
+          "ioValue": 10
         }
       ],
       "interpreterVersion": 1,
-      "code": "// edge.endpoints\nfunction run(assembly: Assembly, inset: number = 0) {\n  return assembly.onLeafs((leaf) => {\n    if (leaf.isWire()) {\n      let points: replicad.Vector[] = []\n      if (inset == 0) {\n        points.push(leaf.geometry.startPoint)\n        points.push(leaf.geometry.endPoint)\n      } else if (inset > 0) {\n        const normalizedInset = inset / leaf.geometry.length;\n        if (normalizedInset < 1) {\n          points.push(leaf.geometry.pointAt(normalizedInset))\n          points.push(leaf.geometry.pointAt(1 - normalizedInset))\n        }\n      } else if (inset < 0) {\n        // ie do an outset.\n        const start = leaf.geometry.startPoint;\n        points.push(start.add(leaf.geometry.tangentAt(0).normalize().multiply(inset)))\n        const end = leaf.geometry.endPoint;\n        points.push(end.add(leaf.geometry.tangentAt(1).normalize().multiply(-1 * inset)))\n      }\n\n      const geoms = points.map((point) => {\n        return new Assembly({\n          ...leaf,\n          geometry: replicad.makeVertex(point)\n        })\n      })\n      return new Assembly({ geometry: geoms })\n    }\n    return leaf;\n  })\n}",
-      "compiledCode": "\"use strict\";\n// edge.endpoints\nfunction run(assembly, inset = 0) {\n    return assembly.onLeafs((leaf) => {\n        if (leaf.isWire()) {\n            let points = [];\n            if (inset == 0) {\n                points.push(leaf.geometry.startPoint);\n                points.push(leaf.geometry.endPoint);\n            }\n            else if (inset > 0) {\n                const normalizedInset = inset / leaf.geometry.length;\n                if (normalizedInset < 1) {\n                    points.push(leaf.geometry.pointAt(normalizedInset));\n                    points.push(leaf.geometry.pointAt(1 - normalizedInset));\n                }\n            }\n            else if (inset < 0) {\n                // ie do an outset.\n                const start = leaf.geometry.startPoint;\n                points.push(start.add(leaf.geometry.tangentAt(0).normalize().multiply(inset)));\n                const end = leaf.geometry.endPoint;\n                points.push(end.add(leaf.geometry.tangentAt(1).normalize().multiply(-1 * inset)));\n            }\n            const geoms = points.map((point) => {\n                return new Assembly({\n                    ...leaf,\n                    geometry: replicad.makeVertex(point)\n                });\n            });\n            return new Assembly({ geometry: geoms });\n        }\n        return leaf;\n    });\n}\n"
+      "code": "// edge.endpoints\nfunction run(assembly: Assembly, inset: number = 0, start: boolean, end: boolean) {\n  if (!start && !end) {\n    return assembly;\n  }\n  return assembly.onLeafs((leaf) => {\n    if (leaf.isWire()) {\n      let points: replicad.Vector[] = []\n      if (inset == 0) {\n        if (start) points.push(leaf.geometry.startPoint)\n        if (end) points.push(leaf.geometry.endPoint)\n      } else if (inset > 0) {\n        const normalizedInset = inset / leaf.geometry.length;\n        if (normalizedInset < 1) {\n          if (start) points.push(leaf.geometry.pointAt(normalizedInset))\n          if (end) points.push(leaf.geometry.pointAt(1 - normalizedInset))\n        }\n      } else if (inset < 0) {\n        // ie do an outset.\n        const startPoint = leaf.geometry.startPoint;\n        if (start) points.push(startPoint.add(leaf.geometry.tangentAt(0).normalize().multiply(inset)))\n        const endPoint = leaf.geometry.endPoint;\n        if (end) points.push(endPoint.add(leaf.geometry.tangentAt(1).normalize().multiply(-1 * inset)))\n      }\n\n      const geoms = points.map((point) => {\n        return new Assembly({\n          ...leaf,\n          geometry: replicad.makeVertex(point)\n        })\n      })\n      if (geoms.length == 1) {\n        return geoms[0]\n      }\n      return new Assembly({ geometry: geoms })\n    }\n    return leaf;\n  })\n}",
+      "compiledCode": "\"use strict\";\n// edge.endpoints\nfunction run(assembly, inset = 0, start, end) {\n    if (!start && !end) {\n        return assembly;\n    }\n    return assembly.onLeafs((leaf) => {\n        if (leaf.isWire()) {\n            let points = [];\n            if (inset == 0) {\n                if (start)\n                    points.push(leaf.geometry.startPoint);\n                if (end)\n                    points.push(leaf.geometry.endPoint);\n            }\n            else if (inset > 0) {\n                const normalizedInset = inset / leaf.geometry.length;\n                if (normalizedInset < 1) {\n                    if (start)\n                        points.push(leaf.geometry.pointAt(normalizedInset));\n                    if (end)\n                        points.push(leaf.geometry.pointAt(1 - normalizedInset));\n                }\n            }\n            else if (inset < 0) {\n                // ie do an outset.\n                const startPoint = leaf.geometry.startPoint;\n                if (start)\n                    points.push(startPoint.add(leaf.geometry.tangentAt(0).normalize().multiply(inset)));\n                const endPoint = leaf.geometry.endPoint;\n                if (end)\n                    points.push(endPoint.add(leaf.geometry.tangentAt(1).normalize().multiply(-1 * inset)));\n            }\n            const geoms = points.map((point) => {\n                return new Assembly({\n                    ...leaf,\n                    geometry: replicad.makeVertex(point)\n                });\n            });\n            if (geoms.length == 1) {\n                return geoms[0];\n            }\n            return new Assembly({ geometry: geoms });\n        }\n        return leaf;\n    });\n}\n"
     },
     {
       "atomType": "Input",
@@ -101,6 +109,16 @@
     {
       "ap2Name": "inset",
       "ap1ID": "id-169",
+      "ap2ID": "id-155"
+    },
+    {
+      "ap2Name": "start",
+      "ap1ID": "id-172",
+      "ap2ID": "id-155"
+    },
+    {
+      "ap2Name": "end",
+      "ap1ID": "id-175",
       "ap2ID": "id-155"
     }
   ],
