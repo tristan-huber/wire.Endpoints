@@ -8,6 +8,8 @@
 
 - **Input** (geometry)
 - **inset** (number)
+- **start** (boolean)
+- **end** (boolean)
 
 
 
